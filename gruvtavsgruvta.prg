@@ -15,7 +15,7 @@
 
 #INCLUDE "DPXBASE.CH"
 
-PROCE MAIN(dDesde1,dHasta1,dDesde2,dHasta2,cCual,cTable,cKey,cField,cFieldF)
+PROCE MAIN(dDesde1,dHasta1,dDesde2,dHasta2,cCual,cTable,cKey,cName,cField,cFieldF)
   LOCAL cSql,cWhere1,cWhere2,cSub,cIf:="",oTable
 
   DEFAULT dDesde1:=FchIniMes(oDp:dFecha-120),;
@@ -25,6 +25,7 @@ PROCE MAIN(dDesde1,dHasta1,dDesde2,dHasta2,cCual,cTable,cKey,cField,cFieldF)
           cCual  :=">"                  ,;
           cTable :="view_dpgrupo_vta"   ,;
           cKey   :="GRU_CODIGO"         ,;
+          cName  :="GRU_DESCRI"         ,;
           cField :="GRU_CANTID"         ,;
           cFieldF:="GRU_FECHA"
 
@@ -32,15 +33,15 @@ PROCE MAIN(dDesde1,dHasta1,dDesde2,dHasta2,cCual,cTable,cKey,cField,cFieldF)
   cWhere2:=GetWhereAnd("T2."+cFieldF,dDesde2,dHasta2)
 
   cSub:=[( SELECT SUM(]+cField+[) FROM ]+cTable+[ AS T2 ]+CRLF+;
-        [  WHERE  T1.GRU_CODIGO=T2.GRU_CODIGO AND ]+cWhere2+;
+        [  WHERE  T1.GRU_CODIGO=T2.]+cKey+[ AND ]+cWhere2+;
         [ ) AS VALHASTA, ]
 
   cIf :=[ IF (( SELECT SUM(]+cField+[) FROM ]+cTable+[ AS T2 ]+CRLF+;
-        [  WHERE  T1.]+cField+[=T2.GRU_CODIGO AND ]+cWhere2+[) IS NULL,SUM(]+cField+[), ]+CRLF+;
+        [  WHERE  T1.]+cField+[=T2.]+cKey+[ AND ]+cWhere2+[) IS NULL,SUM(]+cField+[), ]+CRLF+;
         [ ( SELECT SUM(]+cField+[) FROM ]+cTable+[ AS T2 ]+CRLF+;
         [  WHERE  T1.]+cKey+[=T2.]+cKey+[ AND ]+cWhere2+[)) AS DIF ]
 
-  cSql:=[ SELECT  ]+cKey+[, GRU_DESCRI,SUM(]+cField+[) AS VALDESDE, ]+CRLF+;
+  cSql:=[ SELECT  ]+cKey+[,]+cName+[,SUM(]+cField+[) AS VALDESDE, ]+CRLF+;
         [ ]+cSub+CRLF+;
         [ ]+cIf+CRLF+;
         [ FROM view_dpgrupo_vta AS T1 ]+CRLF+;
