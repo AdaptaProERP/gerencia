@@ -44,7 +44,7 @@ PROCE MAIN(dDesde1,dHasta1,dDesde2,dHasta2,cCual,cTable,cKey,cName,cField,cField
   cSql:=[ SELECT  ]+cKey+[,]+cName+[,SUM(]+cField+[) AS VALDESDE, ]+CRLF+;
         [ ]+cSub+CRLF+;
         [ ]+cIf+CRLF+;
-        [ FROM view_dpgrupo_vta AS T1 ]+CRLF+;
+        [ FROM ]+cTable+[ AS T1 ]+CRLF+;
         [ WHERE ]+cWhere1  +CRLF+;
         [ GROUP BY ]+cKey  +CRLF+;
         [ ORDER BY ]+cField+[ DESC ]
